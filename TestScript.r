@@ -188,4 +188,25 @@ pl <- ggplot(mtcars, aes(mpg,wt)) + geom_point()
 
 pl
 gpl <- ggplotly(pl)
-gpl
+
+
+############# Exercises ############
+
+head(mtcars)
+
+pl <- ggplot(mpg, aes(hwy))
+pl + geom_histogram()
+
+
+pl <- ggplot(mpg, aes(x=manufacturer))
+pl + geom_bar(aes(fill=factor(cyl)))
+
+head(txhousing)
+
+pl <- ggplot(txhousing, aes(y=volume, x=sales))
+pl2 <- pl + geom_point(alpha=0.5, aes(color=sales))
+pl2 + geom_smooth()
+
+
+######### Teh Economistii #############
+
