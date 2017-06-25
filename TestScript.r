@@ -210,3 +210,102 @@ pl2 + geom_smooth()
 
 ######### Teh Economistii #############
 
+help(fread)
+df <- fread('Economist_Assignment_Data.csv', drop=1)
+head(df)
+
+pl <- ggplot(df, aes(x=CPI, y=HDI))
+pl2 <- pl+ geom_point(aes(color=Region), size=5,shape=1)
+pl2 <-pl2 + geom_smooth(aes(group=1),method='lm',formula=y~log(x), se=FALSE,color='Red')
+
+pointsToLabel <- c("Russia", "Venezuela", "Iraq", "Myanmar", "Sudan",
+                   "Afghanistan", "Congo", "Greece", "Argentina", "Brazil",
+                   "India", "Italy", "China", "South Africa", "Spane",
+                   "Botswana", "Cape Verde", "Bhutan", "Rwanda", "France",
+                   "United States", "Germany", "Britain", "Barbados", "Norway", "Japan",
+                   "New Zealand", "Singapore")
+
+pl3 <- pl2 + geom_text(aes(label=Country), color="gray20",
+                       data = subset(df, Country %in% pointsToLabel),check_overlap = TRUE)
+
+pl4 <- pl3 + theme_bw()
+pl4 + scale_x_continuous(name="Corruption Percetion Index", limits=c(1,10), breaks=c(1:10))+
+  ggtitle("Corruption and Human Development") +   theme(plot.title = element_text(hjust = 0.5))
+
+
+################ The Moneyball project ###############
+
+batting <- read.csv('Batting.csv')
+head(batting)
+str(batting)
+head(batting$X2B)
+head(batting$AB)
+
+batting$BA <- batting$H / batting$AB
+head(batting$BA)
+tail(batting$BA, 5)
+
+batting$OBP <- (batting$H+batting$BB+batting$HBP)/(batting$AB+batting$BB+batting$HBP+batting$SF)
+head(batting$OBP)
+batting$X1B = (batting$H-batting$X2B-batting$X3B-batting$HR)
+batting$SLG = (batting$X1B + (2*batting$X2B)+ (3*batting$X3B) +
+                 (4*batting$HR))/batting$AB
+str(batting)
+
+sal <- read.csv('salaries.csv')
+head(sal)
+tmpBatting <- batting
+help(subset)
+duh <- subset(tmpBatting,tmpBatting$yearID>1984)
+summarise(duh)
+summary(duh)
+head(tmpBatting$yearID)
+head(tmpBatting$yearID >1984)
+
+batting <- duh
+help(merge)
+combo <- merge(batting, sal, by=c('playerID', 'yearID'))
+summary(combo)
+
+lost_players <- subset(combo, playerID %in% c('giambja01','damonjo01','saenzol01'))
+lost_players <- subset(lost_players, yearID == 2001)
+lost_players2 <- subset(lost_players,select=c('playerID','H','X2B','X3B',
+                                              'HR','OBP','SLG','BA','AB'))
+head(lost_players2)
+mean(lost_players2)
+summary(lost_players2,mean)
+colMeans(x=lost_players2)
+lost_players2
+
+pl <- ggplot(df, aes(x=wt,y=mpg))
+
+# Geometry
+
+pl + geom_point(size=5, alpha=0.5)
+print(pl + geom_point(aes(size=hp)))
+
+pl + geom_point(aes(size=factor(cyl)))
+pl2 <- pl + geom_point(aes(shape=factor(cyl),size=5,color=hp))
+pl2 + scale_color_gradient(low='blue', high='red')
+
+head(arrange(mtcars, cyl,desc(wt)))
+
+
+############# ##################
+library(dplyr)
+bah <- arrange(combo,desc(AB),desc(OBP) )
+head(bah)
+pl <- ggplot(combo, aes(x=AB,y=OBP))
+pl + geom_point(aes(color=salary))
+colMeans(lost_players2)
+meanOBP <- mean(lost_players2$OBP)
+sumAB <- sum(lost_players2$AB)
+
+OBP_dudes <- subset(combo,OBP>meanOBP)
+head(OBP_dudes)
+teh_dudes <- arrange(OBP_dudes,desc(AB))
+teh_dues <-subset(OBP_dudes, AB>(sumAB/3))
+cheap_duuds <- arrange(teh_dues,desc(-salary))
+head(cheap_duuds)
+head(teh_dudes)
+help(arrange)
