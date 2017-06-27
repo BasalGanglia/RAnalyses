@@ -57,3 +57,48 @@ res <- residuals(model)
 res <- as.data.frame(res)
 ggplot(res,aes(res))+ geom_histogram()
 library(ggplot2)
+
+plot(model)
+
+# Predictions
+
+G3.predictions <- predict(model, test)
+
+results <- cbind(G3.predictions,test$G3)
+colnames(results) <- c('predicted', 'actual')
+results <- as.data.frame(results)
+head(results)
+
+# Take care of neg values
+
+to_zero <- function(x){
+  if(x < 0){
+    return(0)
+  } else{
+    return(x)
+  }
+}
+
+# Apply zero func
+
+min(results)
+results$predicted <- sapply(results$predicted, to_zero)
+
+## Mean Squared Error
+
+mse <- mean((results$actual - results$predicted)^2)
+print(mse)
+
+## RMSE
+
+print(mse^0.5)
+
+############
+
+SSE <- sum((results$predicted - results$actual)^2)
+SST <- sum((mean(df$G3) - results$actual)^2)
+
+R2 <- 1 - SSE/SST
+R2
+
+bikeData <- read.csv('bikeshare.csv')
