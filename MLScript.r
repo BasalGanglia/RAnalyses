@@ -101,4 +101,20 @@ SST <- sum((mean(df$G3) - results$actual)^2)
 R2 <- 1 - SSE/SST
 R2
 
-bikeData <- read.csv('bikeshare.csv')
+bike <- read.csv('bikeshare.csv')
+
+head(bike)
+library(ggplot2)
+pl <- ggplot(bike, aes(x=temp, y=count))
+pl + geom_point(color='Blue', size=2, alpha=0.2)
+bike$pTime <- as.POSIXct(bike$datetime)
+head(bike$datetime)
+
+tplot <- ggplot(bike, aes(x=pTime,y=count))
+tplot + geom_point()
+
+cor(bike$temp, bike$count)
+colnames(bike)
+
+bplot <- ggplot(bike, aes(x=factor(season),y=count))
+bplot + geom_boxplot()
